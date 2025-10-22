@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _futureStats = DataService().getWorkoutStats();
     });
-    // Also refresh AI insight
     _aiInsightKey.currentState?.fetchAIInsight();
   }
 
@@ -72,7 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header with navigation buttons
                       Row(
                         children: [
                           Expanded(
@@ -146,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       desktop: 32.0,
                     )),
 
-                    // AI Insight Card
                     _buildAIInsightCard(),
 
                     SizedBox(height: Responsive.value(
@@ -156,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       desktop: 24.0,
                     )),
 
-                    // Today's Progress Stats
                     _buildStatsSection(
                       totalCalories: totalCalories,
                       totalWorkouts: totalWorkouts,
@@ -171,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       desktop: 24.0,
                     )),
 
-                    // Quick Actions
                     _buildQuickActionsSection(context),
 
                     SizedBox(height: Responsive.value(
@@ -181,7 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       desktop: 20.0,
                     )),
 
-                    // Add navigation to workouts screen with refresh
                     Padding(
                       padding: EdgeInsets.zero,
                       child: AppButton(
@@ -290,7 +284,6 @@ class _AIFitnessInsightCardState extends State<_AIFitnessInsightCard> {
       final totalWorkouts = stats['totalWorkouts'] ?? 0;
       final totalMinutes = stats['totalDuration'] ?? 0;
       final streakDays = stats['streakDays'] ?? 0;
-      // Fetch most recent workout session
       final history = await DataService().getWorkoutHistory();
       if (history.isEmpty) {
         setState(() {
