@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import '../main.dart';
 import '../screens/schedule_screen.dart';
@@ -49,6 +50,12 @@ class NotificationService {
 
   Future<void> initialize() async {
     print('🔧 Initializing notification service...');
+
+    // Skip notification setup on web platform
+    if (kIsWeb) {
+      print('🌐 Running on web, skipping notification initialization');
+      return;
+    }
 
     // Initialize timezone
     tz.initializeTimeZones();
@@ -118,6 +125,12 @@ class NotificationService {
 
   Future<bool> requestPermissions() async {
     print('🔐 Requesting notification permissions...');
+
+    // Skip on web platform
+    if (kIsWeb) {
+      print('🌐 Running on web, skipping permission request');
+      return false;
+    }
 
     bool granted = false;
 

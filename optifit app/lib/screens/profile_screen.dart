@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/theme.dart';
+import '../utils/responsive.dart';
 import 'start_workout_screen.dart';
 import 'schedule_screen.dart';
 import '../services/data_service.dart';
@@ -75,9 +76,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               backgroundColor: AppTheme.background,
               body: SafeArea(
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: AppTheme.paddingLG,
-                    child: Column(
+                  child: Center(
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: Responsive.maxContentWidth(context),
+                      ),
+                      padding: Responsive.padding(context),
+                      child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Header with navigation buttons
@@ -386,11 +391,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
+    },
+  );
   }
 
   List<Widget> _buildRecentAchievements(List<dynamic> history) {

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:OptiFit/screens/schedule_screen.dart';
 import 'package:OptiFit/services/notification_service.dart';
+import 'utils/responsive.dart';
 import 'theme/theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/workouts_screen.dart';
@@ -52,6 +54,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'OptiFit',
       theme: AppTheme.lightTheme,
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
+        breakpoints: [
+          const Breakpoint(start: 0, end: 450, name: MOBILE),
+          const Breakpoint(start: 451, end: 800, name: TABLET),
+          const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+        ],
+      ),
       home: FutureBuilder<Map<String, dynamic>?>(
         future: _initializeApp(),
         builder: (context, snapshot) {
@@ -147,18 +158,41 @@ class _MainScaffoldState extends State<MainScaffold> {
     if (_screens[_selectedIndex] == null) {
       _screens[_selectedIndex] = _buildScreen(_selectedIndex);
     }
+    
+    final isDesktop = ResponsiveBreakpoints.of(context).largerThan(TABLET);
+    
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: List.generate(
-          _screens.length,
-              (i) => _screens[i] ?? const SizedBox.shrink(),
-        ),
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _changeTab,
-      ),
+      body: isDesktop
+          ? Row(
+              children: [
+                CustomBottomNavBar(
+                  currentIndex: _selectedIndex,
+                  onTap: _changeTab,
+                ),
+                Expanded(
+                  child: IndexedStack(
+                    index: _selectedIndex,
+                    children: List.generate(
+                      _screens.length,
+                      (i) => _screens[i] ?? const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : IndexedStack(
+              index: _selectedIndex,
+              children: List.generate(
+                _screens.length,
+                (i) => _screens[i] ?? const SizedBox.shrink(),
+              ),
+            ),
+      bottomNavigationBar: isDesktop
+          ? null
+          : CustomBottomNavBar(
+              currentIndex: _selectedIndex,
+              onTap: _changeTab,
+            ),
     );
   }
 }

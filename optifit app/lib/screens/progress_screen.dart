@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/theme.dart';
+import '../utils/responsive.dart';
 import 'start_workout_screen.dart';
 import 'schedule_screen.dart';
 import '../services/data_service.dart';
@@ -239,11 +240,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
               strokeWidth: 3.0,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: AppTheme.paddingLG,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                child: Center(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: Responsive.maxContentWidth(context),
+                    ),
+                    padding: Responsive.padding(context),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                       // Title and navigation buttons
                       Row(
                         children: [
@@ -609,7 +614,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

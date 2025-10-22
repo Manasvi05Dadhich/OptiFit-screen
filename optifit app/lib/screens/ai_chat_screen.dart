@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/rendering.dart';
 import '../theme/theme.dart';
+import '../utils/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -651,23 +652,75 @@ class _AIChatScreenState extends State<AIChatScreen>
     if (!_suggestionsVisible || _messages.isNotEmpty)
       return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: _suggestions
-            .map(
-              (s) => ActionChip(
-                label: Text(s),
-                onPressed: () => _onSuggestionTap(s),
-                backgroundColor: AppTheme.cardBackground,
-                labelStyle: TextStyle(
-                  color: AppTheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            )
-            .toList(),
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.value(
+          context,
+          mobile: 16.0,
+          tablet: 24.0,
+          desktop: 32.0,
+        ),
+        vertical: 16.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Suggested questions:',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppTheme.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            alignment: WrapAlignment.start,
+            children: _suggestions
+                .map(
+                  (s) => InkWell(
+                    onTap: () => _onSuggestionTap(s),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppTheme.primary.withOpacity(0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.lightbulb_outline,
+                            size: 16,
+                            color: AppTheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              s,
+                              style: TextStyle(
+                                color: AppTheme.primary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
       ),
     );
   }
@@ -682,11 +735,16 @@ class _AIChatScreenState extends State<AIChatScreen>
         elevation: 0,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildUploadCard(),
-            _buildSuggestions(),
-            Expanded(
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: Responsive.maxContentWidth(context),
+            ),
+            child: Column(
+              children: [
+                _buildUploadCard(),
+                _buildSuggestions(),
+                Expanded(
               //  Listen to user's scroll to detect if they are manually scrolling
 
               child: NotificationListener<UserScrollNotification>(
@@ -748,11 +806,13 @@ class _AIChatScreenState extends State<AIChatScreen>
                     onPressed: _isUploading ? null : _onUploadVideo,
                   ),
                 ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    ),
     );
   }
 }

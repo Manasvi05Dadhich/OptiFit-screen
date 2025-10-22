@@ -3,6 +3,7 @@ import 'create_workout_screen.dart';
 import '../services/custom_workout_service.dart';
 import '../theme/theme.dart';
 import '../models/workout_models.dart';
+import '../utils/responsive.dart';
 import 'workout_execution_screen.dart';
 import '../services/workout_history_service.dart';
 import 'workout_details_screen.dart';
@@ -429,9 +430,13 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
           strokeWidth: 3.0,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: AppTheme.paddingLG,
-              child: Column(
+            child: Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: Responsive.maxContentWidth(context),
+                ),
+                padding: Responsive.padding(context),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title and filter icon
@@ -853,7 +858,8 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
                       )
                           .toList(),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
